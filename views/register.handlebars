@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <!-- Include Bootstrap CSS for styling -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-5">
+    <h2>Register</h2>
+    <form id="registrationForm">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="passwordConfirm">Confirm Password:</label>
+            <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="Confirm password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    <div id="message"></div>
+</div>
+
+<!-- Include jQuery and Bootstrap JS for functionality -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#registrationForm').on('submit', function(event) {
+            event.preventDefault();
+
+            const username = $('#username').val();
+            const email = $('#email').val();
+            const password = $('#password').val();
+            const passwordConfirm = $('#passwordConfirm').val();
+
+            // TODO: Add frontend validation here
+
+            // Send data to server
+            fetch('/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password
+                    // Add other fields as necessary
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) { // Assuming server responds with user object on success
+                    $('#message').text('Registration successful!').css('color', 'green');
+                } else {
+                    $('#message').text(data.error).css('color', 'red'); // Assuming server responds with an error message
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                $('#message').text('Registration failed.').css('color', 'red');
+            });
+        });
+    });
+</script>
+</body>
+
+</html>
